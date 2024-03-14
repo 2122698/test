@@ -1,0 +1,34 @@
+version: "3.3"
+networks:
+  dotcomgenaisearch-network:
+    driver: bridge
+
+services:
+  dotcomgenaisearch-backend:
+    env_file: ./Backend/.env
+    container_name: "dotcomgenaisearch-backend"
+    stdin_open: true
+    restart: on-failure
+    build:
+      context: ./Backend/
+      dockerfile: ./dockerfile
+    networks:
+      - dotcomgenaisearch-network
+    # links:
+    #   - "genaisearch_db"
+    volumes:
+      - ./Backend:/src
+
+  nginx:
+    restart: always
+    image: 611951854009.dkr.ecr.us-east-1.amazonaws.com/dto_nginx:1.0.5
+    ports:
+      - "443:443"
+    volumes:
+      - ./Nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - "dotcomgenaisearch-backend"
+    links:
+      - "dotcomgenaisearch-backend"
+    networks:
+      - dotcomgenaisearch-network

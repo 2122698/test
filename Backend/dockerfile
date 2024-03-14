@@ -1,0 +1,18 @@
+FROM pytorch/pytorch
+
+WORKDIR /src
+COPY . /src
+
+RUN apt-get update --fix-missing && apt-get install -y --fix-missing build-essential
+RUN pip install --upgrade pip setuptools
+
+# RUN pip install llama-index -qU pinecone-client datasets nest_asyncio
+RUN pip3 install -r requirements.txt
+
+ADD app.py /app
+
+EXPOSE 8080
+
+# CMD ["gunicorn","--reload", "--bind=0.0.0.0:8080", "app:app","--timeout", "3600"]
+CMD ["python","app.py"]
+# CMD ["streamlit","run","app.py"]
