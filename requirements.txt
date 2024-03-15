@@ -1,0 +1,6 @@
+logger
+unstructured
+certifi==2024.2.2
+Flask==2.2.5
+flask[async]
+Flask-Cors
